@@ -6,8 +6,10 @@ namespace WorldGen.NoddleLib;
 public abstract class Node :INode
 {
     private IReadOnlyCollection<InputPort> inputs;
+    private InputPort primaryInput;
     
     private IReadOnlyCollection<OutputPort> outputs;
+    private OutputPort primaryOutput;
     
     public Node(Type type)
     {
@@ -53,9 +55,23 @@ public abstract class Node :INode
         }
 
         this.inputs = inputs.AsReadOnly();
+        if (inputs.Count > 0)
+            primaryInput = inputs[0];
         this.outputs = outputs.AsReadOnly();
+        if (outputs.Count > 0)
+            primaryOutput = outputs[0];
         //return new NodeType(type.Name, type, inputs.AsReadOnly(), outputs.AsReadOnly());
     }
 
     public abstract void Process();
+
+    public OutputPort GetPrimaryOutput()
+    {
+        return primaryOutput;
+    }
+
+    public InputPort GetPrimaryInput()
+    {
+        return primaryInput;
+    }
 }

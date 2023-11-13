@@ -8,10 +8,9 @@ public class Random2DFieldNode : Node
 {
     private readonly int _width;
     private readonly int _height;
-    
-    [Output]
-    public I2DData<float>? Field;
-    
+
+    [Output] public I2DData<float>? Field;
+
     public Random2DFieldNode(int width, int height) : base(typeof(Random2DFieldNode))
     {
         _width = width;

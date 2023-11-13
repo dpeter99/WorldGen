@@ -6,9 +6,10 @@ public class Graph
 
     private List<Connection> _connections = new();
     
-    public void AddNode(Node node)
+    public Node AddNode(Node node)
     {
         _nodes.Add(node);
+        return node;
     }
 
     public void RemoveNode(Node node)
@@ -44,6 +45,11 @@ public class Graph
         _connections.Add(connection);
         
         inputPort.AddConnection(connection);
+    }
+    
+    public void CreateConnection(Node outputNode, Node inputNode)
+    {
+        CreateConnection(outputNode, outputNode.GetPrimaryOutput(), inputNode, inputNode.GetPrimaryInput());
     }
     
     public void RemoveConnection(Connection connection)
