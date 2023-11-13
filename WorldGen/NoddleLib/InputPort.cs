@@ -1,15 +1,16 @@
+using System.Reflection;
+
 namespace WorldGen.NoddleLib;
 
-public class InputPort
+public class InputPort : Port
 {
-    public string Name { get; }
 
     /// <summary>
     /// The type that represents this port.
     /// For multi-pin ports, this would be a collection like List<> or an array.
     /// For single-pin ports, this is the same as PinType.
     /// </summary>
-    public Type OuterType { get; }
+    public Type OuterType => this.FieldType;
 
     /// <summary>
     /// The type that represents each pin.
@@ -24,11 +25,25 @@ public class InputPort
     
     public List<Connection> Connections;
     
-    public InputPort(string name, Type outerType, Type pinType, bool multiPin)
+    public InputPort(FieldInfo pinMember, Node node, Type pinType, bool multiPin) : base(pinMember, node)
     {
-        Name = name;
-        OuterType = outerType;
         PinType = pinType;
         MultiPin = multiPin;
+        Connections = new List<Connection>();
+    }
+    
+    public void AddConnection(Connection connection)
+    {
+        Connections.Add(connection);
+    }
+    
+    public void RemoveConnection(Connection connection)
+    {
+        Connections.Remove(connection);
+    }
+    
+    public void SetData(object? outputData, Connection connection)
+    {
+        PinMember.SetValue(Node, outputData);
     }
 }

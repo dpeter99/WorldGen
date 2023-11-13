@@ -1,17 +1,16 @@
+using System.Reflection;
+
 namespace WorldGen.NoddleLib;
 
-public class OutputPort
+public class OutputPort : Port
 {
-    public string Name { get; }
-
-    /// <summary>
-    /// The type that represents this pin.
-    /// </summary>
-    public Type PinType { get; }
-
-    public OutputPort(string name, Type pinType)
+    public OutputPort(FieldInfo member, Node node) : base(member, node)
     {
-        Name = name;
-        PinType = pinType;
     }
+    
+    public object? GetData()
+    {
+        return PinMember.GetValue(Node);
+    }
+    
 }

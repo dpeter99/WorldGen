@@ -3,7 +3,7 @@ using WorldGen.NoddleLib.Attributes;
 
 namespace WorldGen.NoddleLib;
 
-public class Node :INode
+public abstract class Node :INode
 {
     private IReadOnlyCollection<InputPort> inputs;
     
@@ -38,7 +38,7 @@ public class Node :INode
                     }
                 }
 
-                var inputPort = new InputPort(field.Name, outerType, pinType, isMultiPin);
+                var inputPort = new InputPort(field, this, pinType, isMultiPin);
 
                 inputs.Add(inputPort);
             }
@@ -46,7 +46,7 @@ public class Node :INode
             var outputAttr = field.GetCustomAttribute<OutputAttribute>();
             if (outputAttr != null)
             {
-                var outputPort = new OutputPort(field.Name, field.FieldType);
+                var outputPort = new OutputPort(field, this);
 
                 outputs.Add(outputPort);
             }
@@ -56,9 +56,6 @@ public class Node :INode
         this.outputs = outputs.AsReadOnly();
         //return new NodeType(type.Name, type, inputs.AsReadOnly(), outputs.AsReadOnly());
     }
-    
-    public void Process()
-    {
-        throw new NotImplementedException();
-    }
+
+    public abstract void Process();
 }
