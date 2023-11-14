@@ -8,7 +8,7 @@ namespace WorldGen.Nodes
     public class RoundArrayNode : Node
     {
         [Input]
-        public I1DData<float>? InputField;
+        public I1DDataReadOnly<double>? InputField;
 
         [Output]
         public I1DData<int>? RoundedField;

@@ -40,7 +40,7 @@ public class Graph
         {
             throw new InvalidOperationException("Nodes must be part of the graph.");
         }
-
+        
         var connection = new Connection(outputNode, outputPort, inputNode, inputPort);
         _connections.Add(connection);
         

@@ -12,11 +12,11 @@ public class Constant2DFieldNode : Node
     
     [Property] public int Value = 1;
     
-    [Output] public I2DData<float> Field;
+    [Output] public I2DData<double> Field;
     
     public override void Process()
     {
-        var data = new Array2D<float>(Width, Height);
+        var data = new Array2D<double>(Width, Height);
 
         for (int i = 0; i < data.Length; i++)
         {

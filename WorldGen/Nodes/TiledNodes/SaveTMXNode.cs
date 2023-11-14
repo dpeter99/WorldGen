@@ -49,7 +49,7 @@ public class SaveTMXNode : Node
                 Name = "Layer " + map.Layers.Count,
                 Data = new Data
                 {
-                    MapData = layerData.MutableCopy().asArray()
+                    MapData = layerData.MutableCopy().AsArray()
                 }
             };
 

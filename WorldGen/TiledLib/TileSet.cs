@@ -22,49 +22,17 @@ public class Image {
 public class Wangcolor { 
 
 	[XmlAttribute(AttributeName="name")] 
-	public string Name { get; set; } 
+	public string Name { get; set; }
 
-	[XmlIgnore]
-	public WangColors WangColors;
-	
-	[XmlAttribute(AttributeName="color")] 
-	public string Color
-	{
-		get => ToTiled(WangColors);
-		set => DecodeTiled(value);
-	}
+	[XmlAttribute(AttributeName = "color")]
+	public string Color { get; set; }
 
-	
+
 	[XmlAttribute(AttributeName="tile")] 
 	public int Tile { get; set; } 
 
 	[XmlAttribute(AttributeName="probability")] 
 	public int Probability { get; set; }
-
-	static WangColors DecodeTiled(string str)
-	{
-		var nums = str.Split(',', StringSplitOptions.RemoveEmptyEntries)
-			.Select(i => int.Parse(i))
-			.ToArray();
-
-		return new WangColors(ArrayHelpers.RotateRight(nums, 1));
-	}
-	
-	static string ToTiled(WangColors str)
-	{
-		return ArrayHelpers.RotateLeft(str.colors, 1)
-			.Select(i => i.ToString())
-			.Aggregate("", (a, b) => a + "," + b);
-	}
-	
-	public static void LeftShiftArray<T>(T[] arr, int shift)
-	{
-		shift = shift % arr.Length;
-		T[] buffer = new T[shift];
-		Array.Copy(arr, buffer, shift);
-		Array.Copy(arr, shift, arr, 0, arr.Length - shift);
-		Array.Copy(buffer, 0, arr, arr.Length - shift, shift);
-	}
 }
 
 [XmlRoot(ElementName="wangtile")]
@@ -73,8 +41,35 @@ public class Wangtile {
 	[XmlAttribute(AttributeName="tileid")] 
 	public int Tileid { get; set; } 
 
+	/// <summary>
+	/// This is a proxy property for the wangid attribute.
+	/// Because Tiled lists the colors starting from top-middle,
+	/// and we want to list them starting from top-left,
+	/// as that is how they are in the maps.
+	/// </summary>
 	[XmlAttribute(AttributeName="wangid")] 
-	public double Wangid { get; set; } 
+	public string Wangid {
+		get => ToTiled(WangColors);
+		set => WangColors = DecodeTiled(value);
+	}
+	
+	[XmlIgnore]
+	public WangColors WangColors;
+	
+	static WangColors DecodeTiled(string str)
+	{
+		var nums = str.Split(',', StringSplitOptions.RemoveEmptyEntries)
+			.Select(i => int.Parse(i))
+			.ToArray();
+
+		return new WangColors(ArrayHelpers.RotateLeft(nums, 1));
+	}
+	
+	static string ToTiled(WangColors str)
+	{
+		return ArrayHelpers.RotateRight(str.colors, 1)
+			.Select(i => i.ToString()).Let(l => string.Join(',',l));
+	}
 }
 
 [XmlRoot(ElementName="wangset")]
@@ -112,10 +107,10 @@ public partial class TileSet {
 	public Wangsets Wangsets { get; set; } 
 
 	[XmlAttribute(AttributeName="version")] 
-	public DateTime Version { get; set; } 
+	public string Version { get; set; } 
 
 	[XmlAttribute(AttributeName="tiledversion")] 
-	public DateTime Tiledversion { get; set; } 
+	public string Tiledversion { get; set; } 
 
 	[XmlAttribute(AttributeName="name")] 
 	public string Name { get; set; } 

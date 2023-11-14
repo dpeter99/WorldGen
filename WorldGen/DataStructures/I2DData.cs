@@ -6,23 +6,23 @@ public interface ICopyable<Self> where Self : ICopyable<Self>
     public Self Copy();
 }
 
-public interface I2DDataReadOnly<T> : ICopyable<I2DDataReadOnly<T>>
+public interface I2DDataReadOnly<T> : ICopyable<I2DDataReadOnly<T>>, I1DDataReadOnly<T>
 {
     public T this[int x, int y] { get; }
     
     public int Width { get; }
     public int Height { get; }
 
-    public I2DData<T> MutableCopy();
+    public new I2DData<T> MutableCopy();
     
-    public I2DData<F> MutableOfType<F>();
+    public new I2DData<F> MutableOfType<F>();
 }
 
-public interface I2DData<T> : I2DDataReadOnly<T>
+public interface I2DData<T> : I2DDataReadOnly<T>, I1DData<T>
 {
-    public T this[int x, int y] { get; set; }
+    public new T this[int x, int y] { get; set; }
     
-    public T[,] asArray();
+    public T[,] AsArray();
 }
 
 public interface I1DDataReadOnly<T> : ICopyable<I1DDataReadOnly<T>>
@@ -65,7 +65,7 @@ public class Array2D<T> : I2DData<T>, I1DData<T>
         set => data[x, y] = value;
     }
 
-    public T[,] asArray()
+    public T[,] AsArray()
     {
         return data;
     }
