@@ -21,8 +21,24 @@ var randomField = g.AddNode(new Random2DFieldNode().Apply(n =>
 var round = g.AddNode(new RoundArrayNode());
 g.CreateConnection(randomField, round);
 
-var output = g.AddNode(new SaveTMXNode("test.tmx"));
 
+var simple = g.AddNode(new Constant2DFieldNode().Apply(n =>
+{
+    n.Width = 200;
+    n.Height = 200;
+    n.Value = 79;
+}));
+var round2 = g.AddNode(new RoundArrayNode());
+g.CreateConnection(simple, round2);
+
+
+
+
+
+
+var output = g.AddNode(new SaveTMXNode("test.tmx"));
+g.CreateConnection(round2, output);
 g.CreateConnection(round, output);
+
 
 g.Execute();

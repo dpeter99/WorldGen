@@ -28,12 +28,9 @@ public class SaveTMXNode : Node
             throw new InvalidOperationException("No layers provided to the TMX loader.");
         }
         
-        var size = Layers.Select(l=>new Vector2(l.Width, l.Height))
-            .Max();
-        
-        var map = new TiledMap((int)size.X, (int)size.Y).Apply(map =>
+        var map = new TiledMap(Layers[0].Width, Layers[0].Height).Apply(map =>
         {
-            map.Tilesets.Add(new Tileset
+            map.Tilesets.Add(new TileSet
             {
                 Source = "/home/dpeter99/Desktop/test.tsx",
                 Firstgid = 1,
@@ -47,7 +44,7 @@ public class SaveTMXNode : Node
 
         foreach (var layerData in Layers)
         {
-            var layer = new Layer((int)size.X, (int)size.Y)
+            var layer = new Layer(Layers[0].Width, Layers[0].Height)
             {
                 Name = "Layer " + map.Layers.Count,
                 Data = new Data

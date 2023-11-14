@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 namespace WorldGen.TiledLib;
 
 [XmlRoot(ElementName="tileset")]
-public class Tileset { 
+public partial class TileSet { 
 
 	[XmlAttribute(AttributeName="firstgid")] 
 	public int Firstgid { get; set; } 
@@ -83,7 +83,7 @@ public class Layer
 public class TiledMap
 {
 
-	[XmlElement(ElementName = "tileset")] public List<Tileset> Tilesets { get; set; } = new();
+	[XmlElement(ElementName = "tileset")] public List<TileSet> Tilesets { get; set; } = new();
 
 	[XmlElement(ElementName = "layer")] public List<Layer> Layers { get; set; } = new();
 
