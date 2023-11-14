@@ -14,7 +14,7 @@ public class ExportCsvNode : Node
 
     public FileInfo FilePath { get; private set; }
 
-    public ExportCsvNode(FileInfo filePath) : base(typeof(ExportCsvNode))
+    public ExportCsvNode(FileInfo filePath)
     {
         FilePath = filePath;
     }

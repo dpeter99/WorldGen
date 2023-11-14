@@ -6,24 +6,25 @@ namespace WorldGen.Nodes;
 
 public class Random2DFieldNode : Node
 {
-    private readonly int _width;
-    private readonly int _height;
+    [Property] public int Width = 200;
+    [Property] public int Height = 200;
+    
+    [Property] public int Min = 0;
+    [Property] public int Max = 1;
+    
+    [Property] public int Seed = 1;
 
     [Output] public I2DData<float>? Field;
 
-    public Random2DFieldNode(int width, int height) : base(typeof(Random2DFieldNode))
-    {
-        _width = width;
-        _height = height;
-    }
-
     public override void Process()
     {
-        var data = new Array2D<float>(_width, _height);
+        var rnd = new Random(Seed);
+        
+        var data = new Array2D<float>(Width, Height);
 
         for (int i = 0; i < data.Length; i++)
         {
-            data[i] = Random.Shared.Next();
+            data[i] = rnd.Next(Min, Max);
         }
 
         Field = data;

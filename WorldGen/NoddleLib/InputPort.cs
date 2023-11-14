@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Reflection;
 
 namespace WorldGen.NoddleLib;
@@ -23,13 +24,22 @@ public class InputPort : Port
     public bool MultiPin { get; }
 
     
-    public List<Connection> Connections;
+    public List<Connection> Connections = new();
+    
+    public Dictionary<Connection, object?> listMapping = new();
     
     public InputPort(FieldInfo pinMember, Node node, Type pinType, bool multiPin) : base(pinMember, node)
     {
         PinType = pinType;
         MultiPin = multiPin;
-        Connections = new List<Connection>();
+
+        if (MultiPin)
+        {
+            if (!typeof(IList).IsAssignableFrom(OuterType))
+            {
+                throw new Exception("Port: " + pinMember.Name + " on: " + node.GetType().Name + " is marked as MultiPin, but is not a list type.");
+            }
+        }
     }
     
     public void AddConnection(Connection connection)
@@ -44,6 +54,21 @@ public class InputPort : Port
     
     public void SetData(object? outputData, Connection connection)
     {
-        PinMember.SetValue(Node, outputData);
+        if(MultiPin)
+        {
+            var list = (IList)(PinMember.GetValue(Node) ?? throw new Exception("MultiPin port was null."));
+            
+            if(listMapping.TryGetValue(connection, out var value))
+            {
+                list.Remove(value);
+            }
+            
+            list.Add(outputData);
+            listMapping[connection] = outputData;
+        }
+        else
+        {
+            PinMember.SetValue(Node, outputData);
+        }
     }
 }

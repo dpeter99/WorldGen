@@ -1,29 +1,39 @@
 namespace WorldGen.DataStructures;
 
 
-public interface ICopyable<Self>
+public interface ICopyable<Self> where Self : ICopyable<Self>
 {
     public Self Copy();
 }
 
-public interface I2DDataReadOnly<T>
+public interface I2DDataReadOnly<T> : ICopyable<I2DDataReadOnly<T>>
 {
     public T this[int x, int y] { get; }
     
     public int Width { get; }
     public int Height { get; }
+
+    public I2DData<T> MutableCopy();
+    
+    public I2DData<F> MutableOfType<F>();
 }
 
 public interface I2DData<T> : I2DDataReadOnly<T>
 {
     public T this[int x, int y] { get; set; }
+    
+    public T[,] asArray();
 }
 
-public interface I1DDataReadOnly<T>
+public interface I1DDataReadOnly<T> : ICopyable<I1DDataReadOnly<T>>
 {
     public T this[int x] { get; }
 
     public int Length { get; }
+    
+    public I1DData<T> MutableCopy();
+
+    public I1DData<F> MutableOfType<F>();
 }
 
 public interface I1DData<T> : I1DDataReadOnly<T>
@@ -31,7 +41,7 @@ public interface I1DData<T> : I1DDataReadOnly<T>
     public T this[int x] { get; set; }
 }
 
-public class Array2D<T> : I2DData<T>, I1DData<T>, ICopyable<Array2D<T>>
+public class Array2D<T> : I2DData<T>, I1DData<T>
 {
     private T[,] data;
     public int Width => data.GetLength(0);
@@ -55,11 +65,53 @@ public class Array2D<T> : I2DData<T>, I1DData<T>, ICopyable<Array2D<T>>
         set => data[x, y] = value;
     }
 
+    public T[,] asArray()
+    {
+        return data;
+    }
+
     public Array2D<T> Copy()
     {
         return new Array2D<T>(this);
     }
 
+    #region I2DData
+    
+    I2DData<T> I2DDataReadOnly<T>.MutableCopy()
+    {
+        return new Array2D<T>(this);
+    }
+
+    I2DDataReadOnly<T> ICopyable<I2DDataReadOnly<T>>.Copy()
+    {
+        return Copy();
+    }
+    
+    I2DData<F> I2DDataReadOnly<T>.MutableOfType<F>()
+    {
+        return new Array2D<F>(Width, Height);
+    }
+    
+    #endregion
+
+    #region I1Data
+    I1DData<T> I1DDataReadOnly<T>.MutableCopy()
+    {
+        return new Array2D<T>(this);
+    }
+
+    I1DDataReadOnly<T> ICopyable<I1DDataReadOnly<T>>.Copy()
+    {
+        return Copy();
+    }
+
+    I1DData<F> I1DDataReadOnly<T>.MutableOfType<F>()
+    {
+        return new Array2D<F>(Width, Height);
+    }
+    
+    #endregion
+    
     public T this[int index]
     {
         get

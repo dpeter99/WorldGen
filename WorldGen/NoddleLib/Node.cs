@@ -11,8 +11,10 @@ public abstract class Node :INode
     private IReadOnlyCollection<OutputPort> outputs;
     private OutputPort primaryOutput;
     
-    public Node(Type type)
+    public Node()
     {
+        Type type = this.GetType(); 
+        
         List<InputPort> inputs = new();
         List<OutputPort> outputs = new();
 
