@@ -31,7 +31,7 @@ g.CreateConnection(simple, round2);
 
 var tsx = g.AddNode(new ImportTSXNode()
 {
-    InputFile = new FileInfo("/home/dpeter99/Desktop/test.tsx"),
+    InputFile = new FileInfo("test.tsx"),
 });
 
 var output = g.AddNode(new SaveTMXNode("test.tmx"));

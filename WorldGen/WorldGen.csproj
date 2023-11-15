@@ -16,4 +16,14 @@
       <Folder Include="Assets\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Assets\mountain_landscape_25.png" />
+      <Resource Include="Assets\mountain_landscape_25.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Resource>
+      <None Update="Assets\test.tsx">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
