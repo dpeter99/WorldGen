@@ -13,10 +13,16 @@ public class WangTileNode : Node
 
     [Output] public I2DData<int> output;
 
+    Dictionary<int, Wangtile> helperMap = new();
+    
     public override void Process()
     {
         var iteration = tileMap.MutableCopy();
 
+        helperMap = new (
+            TileSet.Wangsets.Wangset.Wangtile.Select(i => new KeyValuePair<int, Wangtile>(i.Tileid, i))
+        );
+        
         while (!iteration.Equals(output))
         {
             output = iteration.MutableCopy();
@@ -71,11 +77,11 @@ public class WangTileNode : Node
                 neighbour = map[x + a.x, y + a.y]-1;   
             }
              
-            var neighbourColor = TileSet.Wangsets.Wangset.Wangtile.Find(t => t.Tileid == neighbour);
-            if(neighbourColor is null)
+            //var neighbourColor = helperMap;
+            if(!helperMap.ContainsKey(neighbour))
                 neighbours[i] = 0;
             else
-                neighbours[i] = neighbourColor.WangColors.GetOppositeColor(i);
+                neighbours[i] = helperMap[neighbour].WangColors.GetOppositeColor(i);
         }
 
         return new WangColors(neighbours);

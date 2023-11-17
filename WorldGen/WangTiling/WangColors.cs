@@ -1,3 +1,6 @@
+using System.Numerics;
+using WorldGen.DataStructures;
+
 namespace WorldGen.WangTiling;
 
 public struct WangColors
@@ -66,15 +69,15 @@ public struct WangColors
         return string.Join(',', colors);
     }
 
-    public static (int x, int y) GetDirection(int i)
+    private static Vector2I[] dirs =
     {
-        (int x, int y)[] dirs =
-        {
-            (-1, -1),( 0, -1),( 1, -1),
-            (-1,  0),         ( 1,  0),
-            (-1,  1),( 0,  1),( 1,  1),
-        };
-
+        new (-1, -1),new ( 0, -1),new ( 1, -1),
+        new (-1,  0),                 new ( 1,  0),
+        new (-1,  1),new ( 0,  1),new ( 1,  1),
+    };
+    
+    public static Vector2I GetDirection(int i)
+    {
         return dirs[i];
     }
 }

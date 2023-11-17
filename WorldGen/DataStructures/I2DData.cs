@@ -33,7 +33,7 @@ public interface I2DData<T> : I2DDataReadOnly<T>, I1DData<T>
     public T[,] AsArray();
 }
 
-public interface I1DDataReadOnly<T> : ICopyable<I1DDataReadOnly<T>>
+public interface I1DDataReadOnly<T> : ICopyable<I1DDataReadOnly<T>> , IReadOnlyCollection<T>
 {
     public T this[int x] { get; }
 
@@ -156,6 +156,12 @@ public class Array2D<T> : I2DData<T>, I1DData<T>
         return true;
     }
 
+    public IEnumerator<T> GetEnumerator()
+    {
+        foreach (var item in data)
+            yield return item;
+    }
+
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj)) return false;
@@ -169,6 +175,11 @@ public class Array2D<T> : I2DData<T>, I1DData<T>
         return data.GetHashCode();
     }
 
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
     public static bool operator ==(Array2D<T>? left, Array2D<T>? right)
     {
         return Equals(left, right);
@@ -178,4 +189,6 @@ public class Array2D<T> : I2DData<T>, I1DData<T>
     {
         return !Equals(left, right);
     }
+
+    public int Count => Length;
 }
