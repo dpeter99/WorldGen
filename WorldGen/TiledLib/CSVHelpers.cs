@@ -11,17 +11,17 @@ public class CSVHelpers
 
         var sb = new StringBuilder();
         sb.AppendLine();
-        int numRows = array.GetLength(0);
-        int numColumns = array.GetLength(1);
+        int numRows = array.GetLength(1);
+        int numColumns = array.GetLength(0);
 
         for (int i = 0; i < numRows; i++)
         {
             for (int j = 0; j < numColumns; j++)
             {
-                sb.Append(array[i, j]);
+                sb.Append(array[j, i]);
 
                 // Add a comma unless it's the last element in the last row
-                if (!(i == numRows - 1 && j == numColumns - 1))
+                if (!(j == numRows - 1 && i == numColumns - 1))
                 {
                     sb.Append(",");
                 }

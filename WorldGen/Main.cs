@@ -3,40 +3,45 @@ using WorldGen.Nodes;
 using WorldGen.Nodes.CSV;
 using WorldGen.Nodes.Noise2D;
 using WorldGen.Nodes.TiledNodes;
+using WorldGen.Nodes.Wang;
 using WorldGen.Utils;
 
 var g = new Graph();
 
 var randomField = g.AddNode(new NoiseFiled2DNode()
 {
-    Width = 200,
-    Height = 200,
+    Width = 50,
+    Height = 50,
     Min = 0,
-    Max = 70,
+    Max = 10,
     Seed = 1234,
+    Size = 10f,
     NoiseType = FastNoiseLite.NoiseType.Perlin,
 });
 var round = g.AddNode(new RoundArrayNode());
 g.CreateConnection(randomField, round);
 
-
-var simple = g.AddNode(new Constant2DFieldNode()
+var remap = g.AddNode(new MapValuesNode<int, int>
 {
-    Width = 200,
-    Height = 200,
-    Value = 79,
+    MappingDictionary = new Dictionary<int, int>() { {0, 79}, {6, 11} },
+    MapType = MapType.GreaterThan,
 });
-var round2 = g.AddNode(new RoundArrayNode());
-g.CreateConnection(simple, round2);
+g.CreateConnection(round, remap);
+
 
 var tsx = g.AddNode(new ImportTSXNode()
 {
-    InputFile = new FileInfo("test.tsx"),
+    InputFile = new FileInfo("Assets/test_2.tsx"),
 });
 
+
+var wang = g.AddNode(new WangTileNode());
+g.CreateConnection(remap, wang);
+g.CreateConnection(tsx, wang, wang.Input("TileSet")!);
+
 var output = g.AddNode(new SaveTMXNode("test.tmx"));
-g.CreateConnection(round2, output);
-g.CreateConnection(round, output);
+g.CreateConnection(wang, output);
+g.CreateConnection(remap, output);
 
 g.Execute();
 

@@ -6,10 +6,10 @@ namespace WorldGen.NoddleLib;
 public abstract class Node :INode
 {
     private IReadOnlyCollection<InputPort> inputs;
-    private InputPort primaryInput;
+    private InputPort? primaryInput;
     
     private IReadOnlyCollection<OutputPort> outputs;
-    private OutputPort primaryOutput;
+    private OutputPort? primaryOutput;
     
     public Node()
     {
@@ -24,8 +24,10 @@ public abstract class Node :INode
             if (inputAttr != null)
             {
                 var multi = field.GetCustomAttribute<MultiPinAttribute>();
-
                 bool isMultiPin = multi != null;
+                
+                var primaryAttribute = field.GetCustomAttribute<PrimaryPinAttribute>();
+                bool isPrimary = primaryAttribute != null;
 
                 var outerType = field.FieldType;
                 var pinType = field.FieldType;
@@ -42,7 +44,7 @@ public abstract class Node :INode
                     }
                 }
 
-                var inputPort = new InputPort(field, this, pinType, isMultiPin);
+                var inputPort = new InputPort(field, this, pinType, isMultiPin, isPrimary);
 
                 inputs.Add(inputPort);
             }
@@ -57,10 +59,17 @@ public abstract class Node :INode
         }
 
         this.inputs = inputs.AsReadOnly();
-        if (inputs.Count > 0)
+        if (inputs.Count == 1)
             primaryInput = inputs[0];
+        
+        var primInput = inputs.Where(i => i.Primary).ToList();
+        if (primInput.Count > 1)
+            throw new Exception("Can't have more than one Primary Pin");
+        if (primInput.FirstOrDefault() is not null)
+            primaryInput = primInput.First();
+        
         this.outputs = outputs.AsReadOnly();
-        if (outputs.Count > 0)
+        if (outputs.Count == 1)
             primaryOutput = outputs[0];
         //return new NodeType(type.Name, type, inputs.AsReadOnly(), outputs.AsReadOnly());
     }
@@ -76,4 +85,18 @@ public abstract class Node :INode
     {
         return primaryInput;
     }
+
+    public OutputPort? Output(string name)
+    {
+        return outputs.FirstOrDefault(i => i.Name == name);
+    }
+    
+    public InputPort? Input(string name)
+    {
+        return inputs.FirstOrDefault(i => i.Name == name);
+    }
+}
+
+public class PrimaryPinAttribute : Attribute
+{
 }

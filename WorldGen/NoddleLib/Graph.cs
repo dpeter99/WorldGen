@@ -47,9 +47,16 @@ public class Graph
         inputPort.AddConnection(connection);
     }
     
+    public void CreateConnection(Node outputNode, Node inputNode, InputPort inputPort)
+    {
+        var primaryOutput = outputNode.GetPrimaryOutput();
+        CreateConnection(outputNode, primaryOutput, inputNode, inputPort);
+    }
+    
     public void CreateConnection(Node outputNode, Node inputNode)
     {
-        CreateConnection(outputNode, outputNode.GetPrimaryOutput(), inputNode, inputNode.GetPrimaryInput());
+        var primaryOutput = outputNode.GetPrimaryOutput();
+        CreateConnection(outputNode, primaryOutput, inputNode, inputNode.GetPrimaryInput());
     }
     
     public void RemoveConnection(Connection connection)

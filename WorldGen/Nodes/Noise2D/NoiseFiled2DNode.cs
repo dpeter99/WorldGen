@@ -15,6 +15,7 @@ public class NoiseFiled2DNode : Node
     [Property] public int Max { get; set; }
     
     [Property] public FastNoiseLite.NoiseType NoiseType { get; set; }
+    [Property]public float Size { get; set; }
 
     [Output] public I2DData<double> Output;
     
@@ -30,7 +31,7 @@ public class NoiseFiled2DNode : Node
         {
             for (int y = 0; y < Height; y++)
             {
-                var num = (noise.GetNoise(x, y) + 1d)/2d;
+                var num = (noise.GetNoise(x*Size, y*Size) + 1d)/2d;
                 var value = num * (Max - Min) + Min;
                 data[x, y] = value;
             }

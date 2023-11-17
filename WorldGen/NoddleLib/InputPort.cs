@@ -23,15 +23,18 @@ public class InputPort : Port
     /// </summary>
     public bool MultiPin { get; }
 
-    
+    public bool Primary { get; set; }
+
+
     public List<Connection> Connections = new();
     
     public Dictionary<Connection, object?> listMapping = new();
     
-    public InputPort(FieldInfo pinMember, Node node, Type pinType, bool multiPin) : base(pinMember, node)
+    public InputPort(FieldInfo pinMember, Node node, Type pinType, bool multiPin, bool primary) : base(pinMember, node)
     {
         PinType = pinType;
         MultiPin = multiPin;
+        Primary = primary;
 
         if (MultiPin)
         {

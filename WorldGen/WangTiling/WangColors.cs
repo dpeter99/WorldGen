@@ -1,6 +1,6 @@
 namespace WorldGen.WangTiling;
 
-public class WangColors
+public struct WangColors
 {
     public int[] colors;
     
@@ -16,6 +16,65 @@ public class WangColors
     
     public int GetOppositeColor(int index)
     {
-        return colors[index + 4 % 8];
+        switch (index)
+        {
+            case 0:
+                return colors[7];
+            case 1:
+                return colors[6];
+            case 2:
+                return colors[5];
+            case 3:
+                return colors[4];
+            case 4:
+                return colors[3];
+            case 5:
+                return colors[2];
+            case 6:
+                return colors[1];
+            case 7:
+                return colors[0];
+        }
+
+        return 0;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    public int Matches(object? obj)
+    {
+        if (obj is WangColors other)
+        {
+            int count = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                if (colors[i] == other.colors[i] && colors[i] != 0 && other.colors[i] != 0)
+                    count++;
+            }
+
+            return count;
+        }
+
+        return 0;
+    }
+
+    public override string ToString()
+    {
+        return string.Join(',', colors);
+    }
+
+    public static (int x, int y) GetDirection(int i)
+    {
+        (int x, int y)[] dirs =
+        {
+            (-1, -1),( 0, -1),( 1, -1),
+            (-1,  0),         ( 1,  0),
+            (-1,  1),( 0,  1),( 1,  1),
+        };
+
+        return dirs[i];
     }
 }

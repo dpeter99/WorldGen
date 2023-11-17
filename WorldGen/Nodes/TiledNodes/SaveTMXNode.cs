@@ -32,7 +32,7 @@ public class SaveTMXNode : Node
         {
             map.Tilesets.Add(new TileSet
             {
-                Source = "/home/dpeter99/Desktop/test.tsx",
+                Source = "Assets/test_2.tsx",
                 Firstgid = 1,
             });
             map.Tileheight = 32;

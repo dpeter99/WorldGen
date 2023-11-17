@@ -62,7 +62,14 @@ public class Wangtile {
 			.Select(i => int.Parse(i))
 			.ToArray();
 
-		return new WangColors(ArrayHelpers.RotateLeft(nums, 1));
+		int[] colors = new int[]
+		{
+			nums[7], nums[0], nums[1],
+			nums[6],          nums[2],
+			nums[5], nums[4], nums[3],
+		};
+		
+		return new WangColors(colors);
 	}
 	
 	static string ToTiled(WangColors str)

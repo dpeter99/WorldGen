@@ -1,3 +1,5 @@
+using System.Collections;
+
 namespace WorldGen.DataStructures;
 
 
@@ -6,7 +8,7 @@ public interface ICopyable<Self> where Self : ICopyable<Self>
     public Self Copy();
 }
 
-public interface I2DDataReadOnly<T> : ICopyable<I2DDataReadOnly<T>>, I1DDataReadOnly<T>
+public interface I2DDataReadOnly<T> : ICopyable<I2DDataReadOnly<T>>, I1DDataReadOnly<T>, IEquatable<I2DDataReadOnly<T>>
 {
     public T this[int x, int y] { get; }
     
@@ -16,6 +18,12 @@ public interface I2DDataReadOnly<T> : ICopyable<I2DDataReadOnly<T>>, I1DDataRead
     public new I2DData<T> MutableCopy();
     
     public new I2DData<F> MutableOfType<F>();
+
+    public bool IsInside(int x, int y)
+    {
+        return x >= 0 && x < Width &&
+               y >= 0 && y < Height;
+    }
 }
 
 public interface I2DData<T> : I2DDataReadOnly<T>, I1DData<T>
@@ -126,5 +134,48 @@ public class Array2D<T> : I2DData<T>, I1DData<T>
             int y = index % Width;
             data[x, y] = value;
         }
+    }
+
+    public bool Equals(I2DDataReadOnly<T>? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        
+        if (Height != other.Height || Width != other.Width)
+            return false;
+        
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                if (!this[x, y].Equals(other[x, y]))
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != this.GetType()) return false;
+        return Equals((Array2D<T>)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return data.GetHashCode();
+    }
+
+    public static bool operator ==(Array2D<T>? left, Array2D<T>? right)
+    {
+        return Equals(left, right);
+    }
+
+    public static bool operator !=(Array2D<T>? left, Array2D<T>? right)
+    {
+        return !Equals(left, right);
     }
 }

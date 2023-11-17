@@ -11,19 +11,9 @@
       <PackageReference Include="SkiaSharp" Version="2.88.6" />
       <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.6" />
     </ItemGroup>
-
+    
     <ItemGroup>
-      <Folder Include="Assets\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Assets\mountain_landscape_25.png" />
-      <Resource Include="Assets\mountain_landscape_25.png">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Resource>
-      <None Update="Assets\test.tsx">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+        <None Update="Assets\**" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
 </Project>
